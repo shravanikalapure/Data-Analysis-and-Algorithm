@@ -57,7 +57,6 @@ int main() {
     d.add_route(0, 2, 4);
     d.add_route(1, 2, 2);
     d.add_route(1, 3, 5);
-    d.add_route(2, 3, 1);
-    d.add_route(3, 4, 2);
+    
     d.dijikstra(0); // find shortest paths from room 0
 }
