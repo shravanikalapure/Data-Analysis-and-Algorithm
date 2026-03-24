@@ -1,143 +1,65 @@
 #include <iostream>
-#include <limits>
-#include <cstring>
+#include <vector>
+#include <list>
+#include <queue>
 using namespace std;
 
-#define MAX_DEPTS 100
+class Edge {
+public:
+    int v;
+    int wt;
 
-int mindist(int dist[], bool visited[], int V) {
-
-    int min = INT_MAX, min_index = -1;
-
-    for (int v = 0; v < V; v++) {
-
-        if (!visited[v] && dist[v] <= min) {
-
-            min = dist[v];
-
-            min_index = v;
-
-        }
-
+    Edge (int v, int wt){
+        this->v = v;
+        this->wt = wt;
     }
+};
 
-    return min_index;
+void dijkstra(int src, vector<vector<Edge>> g, int V){
+    vector<int> dist(V, INT_MAX);
+    dist[src] = 0;
 
-}
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>> > pq;
 
-void dijkstra(int graph[MAX_DEPTS][MAX_DEPTS], int V, int SN, char locations[][50]) {
+    pq.push({0, src});
 
-    int dist[V];     
+    while (pq.size() > 0){
+        int u = pq.top().second;
+        pq.pop();
 
-    bool visited[V]; 
+        for (Edge e: g[u]){        //edge relaxation
 
- 
-
-    for (int i = 0; i < V; i++) {
-
-        dist[i] = INT_MAX;
-
-        visited[i] = false;
-
-    }
-
- 
-
-    dist[SN] = 0;
-
- 
-
-    for (int count = 0; count < V - 1; count++) {
-
-        int u = mindist(dist, visited, V);
-
-        if (u == -1) break;
-
-        visited[u] = true;
-
- 
-
-        for (int v = 0; v < V; v++) {
-
-            if (!visited[v] && graph[u][v] && dist[u] != INT_MAX &&
-
-                dist[u] + graph[u][v] < dist[v]) {
-
-                dist[v] = dist[u] + graph[u][v];
-
+            if (dist[e.v] > dist[u] + e.wt){
+                dist[e.v] = dist[u] + e.wt;
+                pq.push({dist[e.v], e.v});
             }
-
         }
-
     }
 
- 
-
-    cout << "\nDepartment \t\t Distance from " << locations[SN] << endl;
-
-    for (int i = 0; i < V; i++) {
-
-        cout << locations[i] << "\t\t\t" << dist[i] << endl;
-
+    for (int i =0; i<V; i++){
+        cout << dist[i] << " ";
     }
+    cout << endl;
 
 }
-
- 
 
 int main() {
+    int V = 6;
+    vector<vector<Edge>> g(V);
 
-    int V;
+    g[0].push_back(Edge(1,2));
+    g[0].push_back(Edge(2,4));
 
-    cout << "Enter number of locations: ";
+    g[1].push_back(Edge(2,1));
+    g[1].push_back(Edge(3,7));
 
-    cin >> V;
+    g[2].push_back(Edge(4,3));
+    g[3].push_back(Edge(5,1));
 
-    cin.ignore();
+    g[4].push_back(Edge(3,2));
+    g[4].push_back(Edge(5,5));
 
-    char locations[MAX_DEPTS][50];
-
-    cout << "Enter department names:\n";
-
-    for (int i = 0; i < V; i++) {
-
-        cout << "Department " << i << ": ";
-
-        cin.getline(locations[i], 50);
-
-    }
-
- 
-
-    int graph[MAX_DEPTS][MAX_DEPTS];
-
-    cout << "Enter the adjacency matrix:\n";
-
-    for (int i = 0; i < V; i++) {
-
-        for (int j = 0; j < V; j++) {
-
-            cin >> graph[i][j];
-
-        }
-
-    }
-
- 
-
-    int startNode;
-
-    cout << "Enter starting department index: ";
-
-    cin >> startNode;
-
- 
-
-    dijkstra(graph, V, startNode, locations);
-
- 
+    dijkstra(0, g, V);   // Call function
 
     return 0;
-
 }
-

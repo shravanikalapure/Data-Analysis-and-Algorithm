@@ -6,7 +6,7 @@ int partition(vector<int> &arr, int st, int end){
     int idx = st - 1;
     int pivot = arr[end];
     for (int j = st; j < end; j++){
-        if (arr[j] <= pivot){
+        if (arr[j] <= pivot){           //modify acc to need
         idx++;
         swap(arr[j], arr[idx]);
         }
